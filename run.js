@@ -1,7 +1,6 @@
-
-
+/*
 var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
+var context = canvas.getContext('2d');*/
 var FPS  					= 25;       // frames per second
 var TIME_INTERVAL			= 1000/FPS; // ms
 var canvaswidth = 700;
