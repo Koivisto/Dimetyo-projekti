@@ -1,0 +1,24 @@
+tekemättä:
+
+-grafiikka
+-äänet
+
+-reitit
+  -piirto
+  
+-topicgenerator
+  -aikapäivitys? intervallilla
+
+-topikit piirtoon kolmiot
+
+-topikkien sisältö
+-popupit?
+
+-hiiren kuuntelu
+
+-liikuttaminen
+  -liikkuvan päättäjän animointi
+
+
+-------------------------------------------------
+tehdyt asiat
