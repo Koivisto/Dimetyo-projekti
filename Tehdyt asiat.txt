@@ -2,9 +2,6 @@ tekemättä:
 
 -grafiikka
 -äänet
-
--reitit
-  -piirto
   
 -topicgenerator
   -aikapäivitys? intervallilla
@@ -22,3 +19,9 @@ tekemättä:
 
 -------------------------------------------------
 tehdyt asiat
+
+HUOM koodi kaatuu Routen konstruktorissa !!! (rivi 273, kun village1.returnX(); tulee eteen)
+  En tiedä miksi Villgen returnX ei toimi, mutta virheilmoitus on että sellaista metodia ei ole olemassa
+
+-reitit
+  -piirto piirtää FFFF00 värisen 10x10 ruudun keskelle reittiä
