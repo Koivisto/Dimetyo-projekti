@@ -3,30 +3,26 @@ tekemättä:
 -grafiikka
 -äänet
   
--topicgenerator
+-topicgenerator, niin ettei topicceja koko aikaa / ei liikaa
   -aikapäivitys? intervallilla
 
--topikit piirtoon kolmiot
-
--topikkien sisältö
+-topikkien sisältö, kaikki kolme topikkityyppiä voisi luoda nyt myös kolmella eri topic generaattorilla (hyötyykö mitään?)
 -popupit?
 
 -hiiren kuuntelu
-
 -liikuttaminen
   -liikkuvan päättäjän animointi
 
 
 -------------------------------------------------
-tehdyt asiat
-
-HUOM koodi kaatuu Routen konstruktorissa !!! (rivi 273, kun village1.returnX(); tulee eteen)
-  En tiedä miksi Villgen returnX ei toimi, mutta virheilmoitus on että sellaista metodia ei ole olemassa
+50 / 100 %, aikaarvio: jäljellä 10 h
+tehdyt asiat - käytetty aika: 4h yhdessä, Minä 6 h maanantaina => pelistä tehty ~50%
 
 -reitit
-  -piirto piirtää FFFF00 värisen 10x10 ruudun keskelle reittiä
+  -piirto piirtää viivan kaupungista toiseen
 
 -kartta on hahmoteltu ja sen mukaiset kaupungit ja reitit on kirjoitettu ja piirretty :
+
 		 Kyyjärvi (0)
 		/
 	/-----Karstula (2)----Autio (0)
@@ -34,3 +30,13 @@ Saarijärvi (2)
 	\------Kannonpää (2)-------Kannonkoski (0)
 			\
 			Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
+
+-officerit liikkuvat randomisti 4% ruudunpäivityksistä, jotta sain ne testauksessa liikkeelle
+
+-topikkigeneraattori pyörii, ja kun officer on samassa paikassa, niin kyseinen topikki poistuu
+-topikit piirtoon kellertävät neliöt+teksti 
+
+-updateGame()-metodi luotu, johon kaikki pelin logiikka pyörimään, päivittyy ennen piirtoa
+  -tarkistaa onko officer ja topic samassa ja poistaa topicin
+  -arpoo officerille uuden paikan jos nappaa
+  -päivittää TopigGen-muuttujalla generaattoria
