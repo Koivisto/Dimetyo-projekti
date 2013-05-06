@@ -35,6 +35,7 @@ var Kinnula;
 
 var Villages;// = [1,1,1];
 var Routes;
+var AllPlaces;
 
 var officer0;
 var officer1;
@@ -42,21 +43,30 @@ var officer2;
 
 var Officers;
 
+var TopicGen; 
+
 function initObjects(){
-console.log("alustetaan");
+//console.log("alustetaan");
 createVillages();
 createRoutes();
 createOfficers();
-console.log("alustettu");
+TopicGen = new TopicGenerator();
+//console.log("alustettu");
 }
 
 //Clear canvas
 function clearCanvas() {
 	context.clearRect( 0, 0, context.canvas.width, context.canvas.height );
+	//tämä on lisätty, jotta näkyisi canvaasin rajat suunnitteluvaiheessa
+	context.beginPath();
+    context.moveTo(canvaswidth -10, canvasheight);
+    context.lineTo(canvaswidth, canvasheight -10);
+    context.stroke();
 }
 
 // Update canvas
 function updateCanvas() {
+	updateGame();
 	// Clear canvas
 	clearCanvas();
 	
@@ -67,15 +77,48 @@ function updateCanvas() {
 	
 	// Start animation (browser selects the optimal frame rate)
 	animationId				= requestAnimationFrame( updateCanvas );
-	console.log("alkoi");
+	//console.log("alkoi");
+}
+//All gamelogics is updated here, before drawing
+function updateGame() {
+	//console.log("------");
+	TopicGen.updateTopics();
+	//At this point officers are moving at random, but they are MOVING!
+	var sataRandom = Math.floor((Math.random()*100)); //0-99
+	if(sataRandom < 4){
+		var randomOfficerIndex = Math.floor((Math.random()*3)); //0-2
+		var movingOfficer = Officers[randomOfficerIndex];
+		var randomPlaceIndex = Math.floor((Math.random()*AllPlaces.length)); //0-length
+		var randomPlace = AllPlaces[randomPlaceIndex];
+		movingOfficer.moveToPlace(randomPlace);
+	}
+	//checking if officer is dealing with topic
+	id = Officers.length;
+	for (var i =0; i<id; i++){
+		var officer = Officers[i];
+		var position = officer.returnPosition();
+		//if (position.returnTopic() != undefined){
+			console.log(position.returnTopic());
+			if (position.returnTopic() != null){
+				position.addTopic(null);
+				//position.addTopic(null);
+				
+				//TopicGenerator need update too, so this indicates him to make new topics
+				var newNumber = TopicGen.returnActiveTopics() -1;
+				TopicGen.setActiveTopics(newNumber);
+				
+				console.log("aihe keskusteltu!!!" + TopicGen.returnActiveTopics());
+			}
+		//}
+	}
 }
 
 function drawVillages() {
-	console.log("for-luuppin ulkopuolella");
+	//console.log("for-luuppin ulkopuolella");
 	var id = Villages.length;
-	console.log(id);
+	//console.log(id);
 	for (var i =0; i<id; i++){
-		console.log("for-luuppi");
+		//console.log("for-luuppi");
 		Villages[i].draw();
 	}	
 }
@@ -149,6 +192,7 @@ Village.prototype.returnY  = function(){
 	return this.y;
 };
 Village.prototype.addTopic  = function(topic){
+	console.log("topikki on " + topic);
 	this.topic = topic;
 };
 Village.prototype.returnName = function(){
@@ -159,9 +203,20 @@ Village.prototype.draw = function(){
 	context.fillStyle = "#00FF00";     
 	//context.drawImage(kunnanKuva,x,y);
 	context.fillRect( this.x, this.y, 50, 50 ); // x-coordinate, y-coordinate, width, height
+	context.fillStyle = "#338833"; 
 	context.fillText(this.name, this.x, this.y);
+	if(this.topic != null){
+		console.log("------piirretään");
+		context.beginPath();
+		context.fillStyle = "#BBBB00";
+		context.fillRect( this.x, this.y, 20, 20 ); // x-coordinate, y-coordinate, width, height
+		context.fillText("Täällä vaaditaan kuntapäättäjää", this.x, this.y);
+		context.closePath(); 
+		
+		/*this.topic.draw();	*/
+	}	
 	context.closePath(); 	
-	console.log("kuutio piirretty");
+	//console.log("kuutio piirretty");
 };
 /*KARTAN HAHMOTELMAA
 						Kyyjärvi (0)
@@ -174,25 +229,25 @@ Saarijärvi (2)
 */
 //creates all villages and list of them
 function createVillages(){
-	Saarijarvi = new Village (100, 100, null, "Saarijärvi");
-	Karstula = new Village (300,300,null, "Karstula");
-	Kyyjarvi = new Village (310,310,null, "Kyyjärvi");
-	Autio= new Village (150, 150, null, "Autio");
-	Kannonpaa = new Village (320,320,null, "Kannonpää");
-	Kannonkoski = new Village (330,330,null, "Kannonkoski");
-	Pirttipera = new Village (340,340,null, "Pirttiperä");
-	Kivijarvi = new Village (350,350,null, "Kivijärvi");
-	Kinnula = new Village (360,360,null, "Kinnula");
+	Saarijarvi = new Village (400, 50, null, "Saarijärvi");
+	Karstula = new Village (500,80,null, "Karstula");
+	Kyyjarvi = new Village (600,250,null, "Kyyjärvi");
+	Autio= new Village (650, 110, null, "Autio");
+	Kannonpaa = new Village (280,150,null, "Kannonpää");
+	Kannonkoski = new Village (0,100,null, "Kannonkoski");
+	Pirttipera = new Village (150,230,null, "Pirttiperä");
+	Kivijarvi = new Village (300,240,null, "Kivijärvi");
+	Kinnula = new Village (330,350,null, "Kinnula");
 
-	Villages = [Saarijarvi, Karstula, Autio, Kannonpaa, Kannonkoski, Pirttipera, Kivijarvi, Kinnula];
+	Villages = [Saarijarvi, Karstula, Kyyjarvi, Autio, Kannonpaa, Kannonkoski, Pirttipera, Kivijarvi, Kinnula];
 }
-//Saarijarvi Karstula Autio	Kannonpaa Kannonkoski Pirttipera Kivijarvi Kinnula
+//Saarijarvi Karstula Kyyjarvi Autio Kannonpaa Kannonkoski Pirttipera Kivijarvi Kinnula
 //------------------------------------------------------------------------
 /*Officer luokka*/
 function Officer(theme){
 	this.chosen=false;//by default not chosen
 		//can be Village or Route
-	this.position=Saarijarvi;//by def in Saarijärvi
+	this.position=SaarijarviKannonpaa;//by def in Saarijärvi
 		//village or null, if null no movement
 	this.target=null;
 	this.ability=theme;
@@ -214,8 +269,14 @@ Officer.prototype.draw = function(){
 Officer.prototype.moveToVillage = function(village){
 	this.position = village;
 };
+Officer.prototype.moveToPlace = function(place){
+	this.position = place;
+};
 Officer.prototype.moveToRoute = function(route){
 	this.position = route;
+};
+Officer.prototype.returnPosition = function(){
+	return this.position;
 };
 
 
@@ -231,52 +292,82 @@ function createOfficers(){
 
 //--------------------------------------------------------------------
 /*Topic-luokka*/
-function Topic(theme){
+function Topic(theme){// position){
 	this.theme = theme;//same as officers ability
+	//this.position = position;
 }
-
+/*
+Topic.prototype.draw = function(){
+	console.log("-----hieno tuli-");
+	context.beginPath();
+	context.fillStyle = "#BBBB00";
+	context.fillRect( this.position.x, this.position.y, 20, 20 ); // x-coordinate, y-coordinate, width, height
+	context.fillText("Täällä vaaditaan kuntapäättäjää", this.position.x, this.position.y);
+	context.closePath(); 	
+};*/
+//-------------------------------------
+/*TopicGenerator-luokka*/
 function TopicGenerator(){
 	this.maxTopics = 4;//4 by default
 	this.activeTopics = 0;//no topics by default
 	this.topicWaitTime = 10000; //ms = 10 sec
 	this.topicHandlingTime = 1000; //ms = 1 sec
 	
-	if(maxTopics > Villages.length){ //if too manu topics...
+	if(this.maxTopics > Villages.length){ //if too manu topics...
 		this.maxTopics = Villages.length;
 	}
 }
+TopicGenerator.prototype.returnActiveTopics = function(){
+	return this.activeTopics;
+};
+TopicGenerator.prototype.setActiveTopics = function(newNumber){
+	this.activeTopics = newNumber;
+};
+
 TopicGenerator.prototype.updateTopics = function(){
-	if (activeTopics < maxTopics){
-		//random LISÄÄ
-		//lisää while lause kunnes kunta jossa ei topiccia
-		var i = 1;
-		
-		var topicInVillage = Villages[i].returnTopic;//miten taulukon jäseneen
-		if(topicInVillge == null){
-			//lisäärandom
-			var topicToVillage = new Topic(0);//enumeraatio???? LISÄÄ JOKU
-			Villages[i].addTopic(topicToVillage); //lisää suodun topicin kylälle
+	
+	if (this.activeTopics < this.maxTopics){
+		var topicNumberBefore = this.activeTopics; //before while-loop
+		//console.log("whilen ulkopuolella");
+		while(topicNumberBefore == this.activeTopics){//repeat so long that there is 1 more topic
+			//console.log("------");
+			var i = Math.floor((Math.random()*Villages.length)); //0-length
+			
+			var village = Villages[i]
+			var topicInVillage = village.returnTopic();
+			if(topicInVillage == null){
+				//console.log("lisätään aihe");
+				var topicType = Math.floor((Math.random()*3));//0-3
+				var topicToVillage = new Topic(topicType);
+				Villages[i].addTopic(topicToVillage); //lisää suodun topicin kylälle
+				this.activeTopics++;
+				
+			}
 		}
+		//console.log("whilen jälkeen");
 	}
 };
 TopicGenerator.prototype.addChallenge = function(){
-	if(maxTopics < Villages.lenght){//if its possible to add
+	if(this.maxTopics < Villages.lenght){//if its possible to add
 		this.maxTopics ++;
 	}
 };
+
 
 //-------------------------------------------------------------------------
 /*Route luokka*/
 function Route(village1, village2){
 	this.village1=village1;
 	this.village2=village2;
-	var v1X=village1.returnX();//kaatuu koska Villagen protoryyppi funktio on kadoksissa //prototype.returnX();
+	//nämä muutettu olennon tiedoiksi jotta voi piirtää helposti
+	this.v1X=village1.x;//returnX();//kaatuu koska Villagen protoryyppi funktio on kadoksissa //prototype.returnX();
 	//reitti kaupunkien välissä, route between villages
-	var v2X=village2.returnX();
-	var v1Y=village1.returnY();
-	var v2Y=village2.returnY();
-	var rX= (v1X +v2X)/2;
-	var rY= (v1Y +v2Y)/2;
+	this.v2X=village2.x;//returnX();
+	this.v1Y=village1.y;//returnY();
+	this.v2Y=village2.y;//returnY();
+	
+	var rX= (this.v1X +this.v2X)/2;
+	var rY= (this.v1Y +this.v2Y)/2;
 	this.x=rX;
 	this.y=rY;
 }
@@ -300,7 +391,7 @@ Saarijärvi (2)
 						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
 */
 function createRoutes(){
-	console.log("Reitit alustetaan");
+	//console.log("Reitit alustetaan");
 	SaarijarviKarstula = new Route(Saarijarvi, Karstula);
 	SaarijarviKannonpaa = new Route(Saarijarvi, Kannonpaa);
 	KarstulaKyyjarvi = new Route(Karstula, Kyyjarvi);
@@ -310,8 +401,14 @@ function createRoutes(){
 	PirttiperaKivijarvi = new Route(Pirttipera, Kivijarvi);
 	KivijarviKinnula = new Route(Kivijarvi, Kinnula);
 	
-	Routes = [SaarijarviKarstula,SaarijarviKannonpaa,KarstulaKyyjarvi,KarstulaAutio,KannonpaaKannonkoski
-	,KannonpaaPirttipera,PirttiperaKivijarvi,KivijarviKinnula];
+	Routes = [SaarijarviKarstula,SaarijarviKannonpaa,KarstulaKyyjarvi,
+	KarstulaAutio,KannonpaaKannonkoski,KannonpaaPirttipera,PirttiperaKivijarvi,
+	KivijarviKinnula];
+	
+	AllPlaces = [SaarijarviKarstula,SaarijarviKannonpaa,KarstulaKyyjarvi,
+	KarstulaAutio,KannonpaaKannonkoski,KannonpaaPirttipera,PirttiperaKivijarvi,
+	KivijarviKinnula, Saarijarvi, Karstula, Kyyjarvi, Autio, Kannonpaa, Kannonkoski,
+	Pirttipera, Kivijarvi, Kinnula];
 }
 Route.prototype.returnX = function(){
 	return this.x;
@@ -319,13 +416,22 @@ Route.prototype.returnX = function(){
 Route.prototype.returnY  = function(){
 	return this.y;
 };
+Route.prototype.returnTopic = function(){
+	return null;//helpompaa kuin periminen == purkka
+};
 Route.prototype.draw = function(){
 	context.beginPath();
-	context.fillStyle = "#FFFF00";     
+    context.moveTo(this.v1X, this.v1Y);
+    context.lineTo(this.v2X, this.v2Y);
+    context.stroke();
+	/*
+	context.beginPath();
+	context.fillStyle = "#000000";     
 	context.fillRect( this.x, this.y, 10, 10 ); // x-coordinate, y-coordinate, width, height
 	//context.fillText(this.name, this.x, this.y);
 	context.closePath(); 	
 	console.log("reitti piirretty");
+	*/
 };
 
 
