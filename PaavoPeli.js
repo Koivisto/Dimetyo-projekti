@@ -13,23 +13,39 @@ var canvasheight = 400;
 canvas.width		= canvaswidth;
 canvas.height		= canvasheight;
 
-
-
 var peliVoitettu = false;
+/*KARTAN HAHMOTELMAA
+						Kyyjärvi (0)
+						/
+		     /-----Karstula (2)----Autio (0)
+Saarijärvi (2)				
+			 \------Kannonpää (2)-------Kannonkoski (0)
+						 \
+						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
+*/
 var Saarijarvi;
-var Villages = [1,1,1];
+var Karstula;
+var Kyyjarvi;
 var Autio;
+var Kannonpaa;
+var Kannonkoski;
+var Pirttipera;
+var Kivijarvi;
+var Kinnula;
+
+var Villages;// = [1,1,1];
+var Routes;
+
 var officer0;
 var officer1;
 var officer2;
+
 var Officers;
 
-
-
-
-
 function initObjects(){
+console.log("alustetaan");
 createVillages();
+createRoutes();
 createOfficers();
 console.log("alustettu");
 }
@@ -46,13 +62,13 @@ function updateCanvas() {
 	
 	// Draw my objects onto the canvas
 	drawVillages();
+	drawRoutes();
 	drawOfficers();
 	
 	// Start animation (browser selects the optimal frame rate)
 	animationId				= requestAnimationFrame( updateCanvas );
 	console.log("alkoi");
 }
-
 
 function drawVillages() {
 	console.log("for-luuppin ulkopuolella");
@@ -63,7 +79,15 @@ function drawVillages() {
 		Villages[i].draw();
 	}	
 }
-
+function drawRoutes() {
+	//console.log("for-luuppin ulkopuolella");
+	var id = Routes.length;
+	//console.log(id);
+	for (var i =0; i<id; i++){
+		//console.log("for-luuppi");
+		Routes[i].draw();
+	}	
+}
 
 function drawOfficers() {
 	
@@ -73,10 +97,7 @@ function drawOfficers() {
 	}
 }
 
-
-
 initObjects();
-
 
 window.addEventListener( "load", function() {
 		updateCanvas();
@@ -109,12 +130,7 @@ window.addEventListener( "load", function() {
 	     };
 	}());
 
-
-
 //------------------------------------------------------
-
-
-
 /*Villge luokka*/
 function Village(x, y, topic, name){
 	this.x=x;
@@ -135,24 +151,42 @@ Village.prototype.returnY  = function(){
 Village.prototype.addTopic  = function(topic){
 	this.topic = topic;
 };
+Village.prototype.returnName = function(){
+	return this.name;
+};
 Village.prototype.draw = function(){
 	context.beginPath();
 	context.fillStyle = "#00FF00";     
 	//context.drawImage(kunnanKuva,x,y);
 	context.fillRect( this.x, this.y, 50, 50 ); // x-coordinate, y-coordinate, width, height
+	context.fillText(this.name, this.x, this.y);
 	context.closePath(); 	
 	console.log("kuutio piirretty");
 };
-
-
+/*KARTAN HAHMOTELMAA
+						Kyyjärvi (0)
+						/
+		     /-----Karstula (2)----Autio (0)
+Saarijärvi (2)				
+			 \------Kannonpää (2)-------Kannonkoski (0)
+						 \
+						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
+*/
 //creates all villages and list of them
 function createVillages(){
 	Saarijarvi = new Village (100, 100, null, "Saarijärvi");
+	Karstula = new Village (300,300,null, "Karstula");
+	Kyyjarvi = new Village (310,310,null, "Kyyjärvi");
 	Autio= new Village (150, 150, null, "Autio");
+	Kannonpaa = new Village (320,320,null, "Kannonpää");
+	Kannonkoski = new Village (330,330,null, "Kannonkoski");
+	Pirttipera = new Village (340,340,null, "Pirttiperä");
+	Kivijarvi = new Village (350,350,null, "Kivijärvi");
+	Kinnula = new Village (360,360,null, "Kinnula");
 
-	Villages = [Saarijarvi, Autio];
+	Villages = [Saarijarvi, Karstula, Autio, Kannonpaa, Kannonkoski, Pirttipera, Kivijarvi, Kinnula];
 }
-
+//Saarijarvi Karstula Autio	Kannonpaa Kannonkoski Pirttipera Kivijarvi Kinnula
 //------------------------------------------------------------------------
 /*Officer luokka*/
 function Officer(theme){
@@ -177,7 +211,12 @@ Officer.prototype.draw = function(){
 	context.fill();
 	context.closePath();
 };
-
+Officer.prototype.moveToVillage = function(village){
+	this.position = village;
+};
+Officer.prototype.moveToRoute = function(route){
+	this.position = route;
+};
 
 
 //creates all 3 officers and list for them
@@ -190,8 +229,8 @@ function createOfficers(){
 }
 
 
-
 //--------------------------------------------------------------------
+/*Topic-luokka*/
 function Topic(theme){
 	this.theme = theme;//same as officers ability
 }
@@ -231,17 +270,62 @@ TopicGenerator.prototype.addChallenge = function(){
 function Route(village1, village2){
 	this.village1=village1;
 	this.village2=village2;
+	var v1X=village1.returnX();//kaatuu koska Villagen protoryyppi funktio on kadoksissa //prototype.returnX();
+	//reitti kaupunkien välissä, route between villages
+	var v2X=village2.returnX();
+	var v1Y=village1.returnY();
+	var v2Y=village2.returnY();
+	var rX= (v1X +v2X)/2;
+	var rY= (v1Y +v2Y)/2;
+	this.x=rX;
+	this.y=rY;
 }
-function createRoutes(){
-	
+var SaarijarviKarstula;
+var SaarijarviKannonpaa;
+var KarstulaKyyjarvi;
+var KarstulaAutio;
+var KannonpaaKannonkoski;
+var KannonpaaPirttipera;
+var PirttiperaKivijarvi;
+var KivijarviKinnula;
 
-}
 
-/*
-				Autio------<
-Saarijärvi----<
-				Kyyjärvi----<
+/*KARTAN HAHMOTELMAA
+						Kyyjärvi (0)
+						/
+		     /-----Karstula (2)----Autio (0)
+Saarijärvi (2)				
+			 \------Kannonpää (2)-------Kannonkoski (0)
+						 \
+						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
 */
-var SaarijarviAutio = new Route (Saarijarvi, Autio);
+function createRoutes(){
+	console.log("Reitit alustetaan");
+	SaarijarviKarstula = new Route(Saarijarvi, Karstula);
+	SaarijarviKannonpaa = new Route(Saarijarvi, Kannonpaa);
+	KarstulaKyyjarvi = new Route(Karstula, Kyyjarvi);
+	KarstulaAutio = new Route(Karstula, Autio);
+	KannonpaaKannonkoski = new Route(Kannonpaa, Kannonkoski);
+	KannonpaaPirttipera = new Route(Kannonpaa, Pirttipera);
+	PirttiperaKivijarvi = new Route(Pirttipera, Kivijarvi);
+	KivijarviKinnula = new Route(Kivijarvi, Kinnula);
+	
+	Routes = [SaarijarviKarstula,SaarijarviKannonpaa,KarstulaKyyjarvi,KarstulaAutio,KannonpaaKannonkoski
+	,KannonpaaPirttipera,PirttiperaKivijarvi,KivijarviKinnula];
+}
+Route.prototype.returnX = function(){
+	return this.x;
+};
+Route.prototype.returnY  = function(){
+	return this.y;
+};
+Route.prototype.draw = function(){
+	context.beginPath();
+	context.fillStyle = "#FFFF00";     
+	context.fillRect( this.x, this.y, 10, 10 ); // x-coordinate, y-coordinate, width, height
+	//context.fillText(this.name, this.x, this.y);
+	context.closePath(); 	
+	console.log("reitti piirretty");
+};
 
 
