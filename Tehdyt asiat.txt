@@ -26,7 +26,7 @@ HUOM koodi kaatuu Routen konstruktorissa !!! (rivi 273, kun village1.returnX(); 
 -reitit
   -piirto piirtää FFFF00 värisen 10x10 ruudun keskelle reittiä
 
--kartta on hahmoteltu ja sen mukaiset kaupungit ja reitit on kirjoitettu ja piirretty:
+-kartta on hahmoteltu ja sen mukaiset kaupungit ja reitit on kirjoitettu ja piirretty :
   					     Kyyjärvi (0)
 					   /
 		   /-----Karstula (2)----Autio (0)
