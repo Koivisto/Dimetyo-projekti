@@ -1,6 +1,6 @@
 /*	PaavoPeli
 	Author: Aarne Leinonen
-	Tehty studio2 ja dimetyÃ¶ kurssien projektina
+	Tehty studio2 ja dimetyö kurssien projektina
 */
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
@@ -13,13 +13,13 @@ canvas.height		= canvasheight;
 var peliVoitettu = false;
 var isClicked = false;
 /*KARTAN HAHMOTELMAA
-						KyyjÃ¤rvi (0)
+						Kyyjärvi (0)
 						/
 		     /-----Karstula (2)----Autio (0)
-SaarijÃ¤rvi (2)				
-			 \------KannonpÃ¤Ã¤ (2)-------Kannonkoski (0)
+Saarijärvi (2)				
+			 \------Kannonpää (2)-------Kannonkoski (0)
 						 \
-						 PirttiperÃ¤ (1)-----KivijÃ¤rvi (1)-----Kinnula (0)
+						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
 */
 var Saarijarvi;
 var Karstula;
@@ -60,7 +60,7 @@ TopicGen = new TopicGenerator();
 //Clear canvas
 function clearCanvas() {
 	context.clearRect( 0, 0, context.canvas.width, context.canvas.height );
-	//tÃ¤mÃ¤ on lisÃ¤tty, jotta nÃ¤kyisi canvaasin rajat suunnitteluvaiheessa
+	//tämä on lisätty, jotta näkyisi canvaasin rajat suunnitteluvaiheessa
 	context.beginPath();
     context.moveTo(canvaswidth -10, canvasheight);
     context.lineTo(canvaswidth, canvasheight -10);
@@ -246,11 +246,11 @@ Village.prototype.draw = function(){
 	context.fillStyle = "#338833"; 
 	context.fillText(this.name, this.x, this.y);
 	if(this.topic != null){
-		//console.log("------piirretÃ¤Ã¤n");
+		//console.log("------piirretään");
 		context.beginPath();
 		context.fillStyle = "#BBBB00";
 		context.fillRect( this.x, this.y, 20, 20 ); // x-coordinate, y-coordinate, width, height
-		context.fillText("TÃ¤Ã¤llÃ¤ vaaditaan kuntapÃ¤Ã¤ttÃ¤jÃ¤Ã¤", this.x, this.y);
+		context.fillText("Täällä vaaditaan kuntapäättäjää", this.x, this.y);
 		context.closePath(); 
 		
 		/*this.topic.draw();	*/
@@ -259,24 +259,24 @@ Village.prototype.draw = function(){
 	//console.log("kuutio piirretty");
 };
 /*KARTAN HAHMOTELMAA
-						KyyjÃ¤rvi (0)
+						Kyyjärvi (0)
 						/
 		     /-----Karstula (2)----Autio (0)
-SaarijÃ¤rvi (2)				
-			 \------KannonpÃ¤Ã¤ (2)-------Kannonkoski (0)
+Saarijärvi (2)				
+			 \------Kannonpää (2)-------Kannonkoski (0)
 						 \
-						 PirttiperÃ¤ (1)-----KivijÃ¤rvi (1)-----Kinnula (0)
+						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
 */
 //creates all villages and list of them
 function createVillages(){
-	Saarijarvi = new Village (400, 50, null, "SaarijÃ¤rvi");
+	Saarijarvi = new Village (400, 50, null, "Saarijärvi");
 	Karstula = new Village (500,80,null, "Karstula");
-	Kyyjarvi = new Village (600,250,null, "KyyjÃ¤rvi");
+	Kyyjarvi = new Village (600,250,null, "Kyyjärvi");
 	Autio= new Village (650, 110, null, "Autio");
-	Kannonpaa = new Village (280,150,null, "KannonpÃ¤Ã¤");
+	Kannonpaa = new Village (280,150,null, "Kannonpää");
 	Kannonkoski = new Village (0,100,null, "Kannonkoski");
-	Pirttipera = new Village (150,230,null, "PirttiperÃ¤");
-	Kivijarvi = new Village (300,240,null, "KivijÃ¤rvi");
+	Pirttipera = new Village (150,230,null, "Pirttiperä");
+	Kivijarvi = new Village (300,240,null, "Kivijärvi");
 	Kinnula = new Village (330,350,null, "Kinnula");
 
 	Villages = [Saarijarvi, Karstula, Kyyjarvi, Autio, Kannonpaa, Kannonkoski, Pirttipera, Kivijarvi, Kinnula];
@@ -287,7 +287,7 @@ function createVillages(){
 function Officer(theme, position){
 	this.chosen=false;//by default not chosen
 		//can be Village or Route
-	this.position=position;//by def in SaarijÃ¤rvi
+	this.position=position;//by def in Saarijärvi
 		//village or null, if null no movement
 	this.target=null;
 	this.ability=theme;
@@ -297,7 +297,7 @@ function Officer(theme, position){
 Officer.prototype.draw = function(){
 	context.beginPath();
 	if (this.status == "1") {
-	context.fillStyle = "#000";     // joku väri
+	context.fillStyle = "#000";     // joku v�ri
 	}
 	else if (this.status == "2") {
 		context.fillStyle = "#FFF";   
@@ -371,7 +371,7 @@ Topic.prototype.draw = function(){
 	context.beginPath();
 	context.fillStyle = "#BBBB00";
 	context.fillRect( this.position.x, this.position.y, 20, 20 ); // x-coordinate, y-coordinate, width, height
-	context.fillText("TÃ¤Ã¤llÃ¤ vaaditaan kuntapÃ¤Ã¤ttÃ¤jÃ¤Ã¤", this.position.x, this.position.y);
+	context.fillText("Täällä vaaditaan kuntapäättäjää", this.position.x, this.position.y);
 	context.closePath(); 	
 };*/
 //-------------------------------------
@@ -406,15 +406,15 @@ TopicGenerator.prototype.updateTopics = function(){
 			var village = Villages[i];
 			var topicInVillage = village.returnTopic();
 			if(topicInVillage == null){
-				//console.log("lisÃ¤tÃ¤Ã¤n aihe");
+				//console.log("lisätään aihe");
 				var topicType = Math.floor((Math.random()*3));//0-3
 				var topicToVillage = new Topic(topicType);
-				Villages[i].addTopic(topicToVillage); //lisÃ¤Ã¤ suodun topicin kylÃ¤lle
+				Villages[i].addTopic(topicToVillage); //lisää suodun topicin kylälle
 				this.activeTopics++;
 				
 			}
 		}
-		//console.log("whilen jÃ¤lkeen");
+		//console.log("whilen jälkeen");
 	}
 };
 TopicGenerator.prototype.addChallenge = function(){
@@ -429,9 +429,9 @@ TopicGenerator.prototype.addChallenge = function(){
 function Route(village1, village2){
 	this.village1=village1;
 	this.village2=village2;
-	//nÃ¤mÃ¤ muutettu olennon tiedoiksi jotta voi piirtÃ¤Ã¤ helposti
+	//nämä muutettu olennon tiedoiksi jotta voi piirtää helposti
 	this.v1X=village1.x;//returnX();//kaatuu koska Villagen protoryyppi funktio on kadoksissa //prototype.returnX();
-	//reitti kaupunkien vÃ¤lissÃ¤, route between villages
+	//reitti kaupunkien välissä, route between villages
 	this.v2X=village2.x;//returnX();
 	this.v1Y=village1.y;//returnY();
 	this.v2Y=village2.y;//returnY();
@@ -452,13 +452,13 @@ var KivijarviKinnula;
 
 
 /*KARTAN HAHMOTELMAA
-						KyyjÃ¤rvi (0)
+						Kyyjärvi (0)
 						/
 		     /-----Karstula (2)----Autio (0)
-SaarijÃ¤rvi (2)				
-			 \------KannonpÃ¤Ã¤ (2)-------Kannonkoski (0)
+Saarijärvi (2)				
+			 \------Kannonpää (2)-------Kannonkoski (0)
 						 \
-						 PirttiperÃ¤ (1)-----KivijÃ¤rvi (1)-----Kinnula (0)
+						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
 */
 function createRoutes(){
 	//console.log("Reitit alustetaan");
