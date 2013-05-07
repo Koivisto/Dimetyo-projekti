@@ -1,27 +1,25 @@
 /*	PaavoPeli
 	Author: Aarne Leinonen
-	Tehty studio2 ja dimetyö kurssien projektina
+	Tehty studio2 ja dimetyÃ¶ kurssien projektina
 */
-
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 var FPS  					= 25;       // frames per second
 var TIME_INTERVAL			= 1000/FPS; // ms
 var canvaswidth = 700;
 var canvasheight = 400;
-
 canvas.width		= canvaswidth;
 canvas.height		= canvasheight;
-
 var peliVoitettu = false;
+var isClicked = false;
 /*KARTAN HAHMOTELMAA
-						Kyyjärvi (0)
+						KyyjÃ¤rvi (0)
 						/
 		     /-----Karstula (2)----Autio (0)
-Saarijärvi (2)				
-			 \------Kannonpää (2)-------Kannonkoski (0)
+SaarijÃ¤rvi (2)				
+			 \------KannonpÃ¤Ã¤ (2)-------Kannonkoski (0)
 						 \
-						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
+						 PirttiperÃ¤ (1)-----KivijÃ¤rvi (1)-----Kinnula (0)
 */
 var Saarijarvi;
 var Karstula;
@@ -45,6 +43,11 @@ var Officers;
 
 var TopicGen; 
 
+var mouseX;
+var mouseY;
+
+
+
 function initObjects(){
 //console.log("alustetaan");
 createVillages();
@@ -57,7 +60,7 @@ TopicGen = new TopicGenerator();
 //Clear canvas
 function clearCanvas() {
 	context.clearRect( 0, 0, context.canvas.width, context.canvas.height );
-	//tämä on lisätty, jotta näkyisi canvaasin rajat suunnitteluvaiheessa
+	//tÃ¤mÃ¤ on lisÃ¤tty, jotta nÃ¤kyisi canvaasin rajat suunnitteluvaiheessa
 	context.beginPath();
     context.moveTo(canvaswidth -10, canvasheight);
     context.lineTo(canvaswidth, canvasheight -10);
@@ -66,10 +69,10 @@ function clearCanvas() {
 
 // Update canvas
 function updateCanvas() {
+	mouseListener();
 	updateGame();
 	// Clear canvas
 	clearCanvas();
-	
 	// Draw my objects onto the canvas
 	drawVillages();
 	drawRoutes();
@@ -79,26 +82,62 @@ function updateCanvas() {
 	animationId				= requestAnimationFrame( updateCanvas );
 	//console.log("alkoi");
 }
+
+function mouseListener(){
+	if (isClicked == true){
+		console.log("painettu");
+		
+		id = Officers.length;
+		for (var i =0; i<id; i++){
+			var officer = Officers[i];
+			var status = officer.returnStatus()
+			if (status == "3"){
+				officer.setStatus();
+			}
+		}
+		
+		isClicked = false;
+		
+		
+	}
+	
+}
+
+
+
+
+canvas.addEventListener('click', function(evt) {
+	var rect = canvas.getBoundingClientRect();
+    mouseX = evt.clientX - rect.left;
+    mouseY = evt.clientY - rect.top;
+    
+    var message = ('Mouse position: ' + mouseX +',' + mouseY);
+   console.log("painoin" + message);
+   isClicked = true;
+  }, false);
+
+
+
 //All gamelogics is updated here, before drawing
 function updateGame() {
 	//console.log("------");
 	TopicGen.updateTopics();
 	//At this point officers are moving at random, but they are MOVING!
-	var sataRandom = Math.floor((Math.random()*100)); //0-99
+	/*var sataRandom = Math.floor((Math.random()*100)); //0-99
 	if(sataRandom < 4){
 		var randomOfficerIndex = Math.floor((Math.random()*3)); //0-2
 		var movingOfficer = Officers[randomOfficerIndex];
 		var randomPlaceIndex = Math.floor((Math.random()*AllPlaces.length)); //0-length
 		var randomPlace = AllPlaces[randomPlaceIndex];
 		movingOfficer.moveToPlace(randomPlace);
-	}
+	}*/
 	//checking if officer is dealing with topic
 	id = Officers.length;
 	for (var i =0; i<id; i++){
 		var officer = Officers[i];
 		var position = officer.returnPosition();
 		//if (position.returnTopic() != undefined){
-			console.log(position.returnTopic());
+			//console.log(position.returnTopic());
 			if (position.returnTopic() != null){
 				position.addTopic(null);
 				//position.addTopic(null);
@@ -140,10 +179,11 @@ function drawOfficers() {
 	}
 }
 
-initObjects();
 
 window.addEventListener( "load", function() {
-		updateCanvas();
+	initObjects();	
+	updateCanvas();
+		
 }
 );
 
@@ -192,7 +232,7 @@ Village.prototype.returnY  = function(){
 	return this.y;
 };
 Village.prototype.addTopic  = function(topic){
-	console.log("topikki on " + topic);
+	//console.log("topikki on " + topic);
 	this.topic = topic;
 };
 Village.prototype.returnName = function(){
@@ -206,11 +246,11 @@ Village.prototype.draw = function(){
 	context.fillStyle = "#338833"; 
 	context.fillText(this.name, this.x, this.y);
 	if(this.topic != null){
-		console.log("------piirretään");
+		//console.log("------piirretÃ¤Ã¤n");
 		context.beginPath();
 		context.fillStyle = "#BBBB00";
 		context.fillRect( this.x, this.y, 20, 20 ); // x-coordinate, y-coordinate, width, height
-		context.fillText("Täällä vaaditaan kuntapäättäjää", this.x, this.y);
+		context.fillText("TÃ¤Ã¤llÃ¤ vaaditaan kuntapÃ¤Ã¤ttÃ¤jÃ¤Ã¤", this.x, this.y);
 		context.closePath(); 
 		
 		/*this.topic.draw();	*/
@@ -219,24 +259,24 @@ Village.prototype.draw = function(){
 	//console.log("kuutio piirretty");
 };
 /*KARTAN HAHMOTELMAA
-						Kyyjärvi (0)
+						KyyjÃ¤rvi (0)
 						/
 		     /-----Karstula (2)----Autio (0)
-Saarijärvi (2)				
-			 \------Kannonpää (2)-------Kannonkoski (0)
+SaarijÃ¤rvi (2)				
+			 \------KannonpÃ¤Ã¤ (2)-------Kannonkoski (0)
 						 \
-						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
+						 PirttiperÃ¤ (1)-----KivijÃ¤rvi (1)-----Kinnula (0)
 */
 //creates all villages and list of them
 function createVillages(){
-	Saarijarvi = new Village (400, 50, null, "Saarijärvi");
+	Saarijarvi = new Village (400, 50, null, "SaarijÃ¤rvi");
 	Karstula = new Village (500,80,null, "Karstula");
-	Kyyjarvi = new Village (600,250,null, "Kyyjärvi");
+	Kyyjarvi = new Village (600,250,null, "KyyjÃ¤rvi");
 	Autio= new Village (650, 110, null, "Autio");
-	Kannonpaa = new Village (280,150,null, "Kannonpää");
+	Kannonpaa = new Village (280,150,null, "KannonpÃ¤Ã¤");
 	Kannonkoski = new Village (0,100,null, "Kannonkoski");
-	Pirttipera = new Village (150,230,null, "Pirttiperä");
-	Kivijarvi = new Village (300,240,null, "Kivijärvi");
+	Pirttipera = new Village (150,230,null, "PirttiperÃ¤");
+	Kivijarvi = new Village (300,240,null, "KivijÃ¤rvi");
 	Kinnula = new Village (330,350,null, "Kinnula");
 
 	Villages = [Saarijarvi, Karstula, Kyyjarvi, Autio, Kannonpaa, Kannonkoski, Pirttipera, Kivijarvi, Kinnula];
@@ -244,20 +284,30 @@ function createVillages(){
 //Saarijarvi Karstula Kyyjarvi Autio Kannonpaa Kannonkoski Pirttipera Kivijarvi Kinnula
 //------------------------------------------------------------------------
 /*Officer luokka*/
-function Officer(theme){
+function Officer(theme, position){
 	this.chosen=false;//by default not chosen
 		//can be Village or Route
-	this.position=SaarijarviKannonpaa;//by def in Saarijärvi
+	this.position=position;//by def in SaarijÃ¤rvi
 		//village or null, if null no movement
 	this.target=null;
 	this.ability=theme;
+	this.status = "3";
 }
+
 Officer.prototype.draw = function(){
 	context.beginPath();
-	context.fillStyle = "#FF0000";     // Red
+	if (this.status == "1") {
+	context.fillStyle = "#000";     // joku väri
+	}
+	else if (this.status == "2") {
+		context.fillStyle = "#FFF";   
+	}
+	else{
+		context.fillStyle = "#FF0000";     // Red
+		}
 	
 	if( this.position != null){ //ei ole null
-		var pos = this.position
+		var pos = this.position;
 		var posX = pos.returnX();
 		var posY = pos.returnY();
 	}
@@ -266,6 +316,7 @@ Officer.prototype.draw = function(){
 	context.fill();
 	context.closePath();
 };
+
 Officer.prototype.moveToVillage = function(village){
 	this.position = village;
 };
@@ -280,11 +331,29 @@ Officer.prototype.returnPosition = function(){
 };
 
 
+
+Officer.prototype.returnStatus = function(){
+	return this.status;
+};
+
+Officer.prototype.setStatus = function(){
+		var pos = this.position;
+		var disX = Math.pow(pos.returnX()- mouseX,2);
+		//console.log(mouseX);
+		console.log(pos.returnX());
+		var	disY = Math.pow(pos.returnY()- mouseY,2);
+	if (disX<30 && disY<30){
+		this.status = "1";
+	}
+	console.log("status " + this.status);
+};
+
+
 //creates all 3 officers and list for them
 function createOfficers(){
-	officer0 = new Officer(0);
-	officer1 = new Officer(1);
-	officer2 = new Officer(2);
+	officer0 = new Officer(0, Kinnula);
+	officer1 = new Officer(1, Saarijarvi);
+	officer2 = new Officer(2, Autio);
 	
 	Officers = [officer0, officer1, officer2];
 }
@@ -302,10 +371,11 @@ Topic.prototype.draw = function(){
 	context.beginPath();
 	context.fillStyle = "#BBBB00";
 	context.fillRect( this.position.x, this.position.y, 20, 20 ); // x-coordinate, y-coordinate, width, height
-	context.fillText("Täällä vaaditaan kuntapäättäjää", this.position.x, this.position.y);
+	context.fillText("TÃ¤Ã¤llÃ¤ vaaditaan kuntapÃ¤Ã¤ttÃ¤jÃ¤Ã¤", this.position.x, this.position.y);
 	context.closePath(); 	
 };*/
 //-------------------------------------
+
 /*TopicGenerator-luokka*/
 function TopicGenerator(){
 	this.maxTopics = 4;//4 by default
@@ -333,18 +403,18 @@ TopicGenerator.prototype.updateTopics = function(){
 			//console.log("------");
 			var i = Math.floor((Math.random()*Villages.length)); //0-length
 			
-			var village = Villages[i]
+			var village = Villages[i];
 			var topicInVillage = village.returnTopic();
 			if(topicInVillage == null){
-				//console.log("lisätään aihe");
+				//console.log("lisÃ¤tÃ¤Ã¤n aihe");
 				var topicType = Math.floor((Math.random()*3));//0-3
 				var topicToVillage = new Topic(topicType);
-				Villages[i].addTopic(topicToVillage); //lisää suodun topicin kylälle
+				Villages[i].addTopic(topicToVillage); //lisÃ¤Ã¤ suodun topicin kylÃ¤lle
 				this.activeTopics++;
 				
 			}
 		}
-		//console.log("whilen jälkeen");
+		//console.log("whilen jÃ¤lkeen");
 	}
 };
 TopicGenerator.prototype.addChallenge = function(){
@@ -359,9 +429,9 @@ TopicGenerator.prototype.addChallenge = function(){
 function Route(village1, village2){
 	this.village1=village1;
 	this.village2=village2;
-	//nämä muutettu olennon tiedoiksi jotta voi piirtää helposti
+	//nÃ¤mÃ¤ muutettu olennon tiedoiksi jotta voi piirtÃ¤Ã¤ helposti
 	this.v1X=village1.x;//returnX();//kaatuu koska Villagen protoryyppi funktio on kadoksissa //prototype.returnX();
-	//reitti kaupunkien välissä, route between villages
+	//reitti kaupunkien vÃ¤lissÃ¤, route between villages
 	this.v2X=village2.x;//returnX();
 	this.v1Y=village1.y;//returnY();
 	this.v2Y=village2.y;//returnY();
@@ -382,13 +452,13 @@ var KivijarviKinnula;
 
 
 /*KARTAN HAHMOTELMAA
-						Kyyjärvi (0)
+						KyyjÃ¤rvi (0)
 						/
 		     /-----Karstula (2)----Autio (0)
-Saarijärvi (2)				
-			 \------Kannonpää (2)-------Kannonkoski (0)
+SaarijÃ¤rvi (2)				
+			 \------KannonpÃ¤Ã¤ (2)-------Kannonkoski (0)
 						 \
-						 Pirttiperä (1)-----Kivijärvi (1)-----Kinnula (0)
+						 PirttiperÃ¤ (1)-----KivijÃ¤rvi (1)-----Kinnula (0)
 */
 function createRoutes(){
 	//console.log("Reitit alustetaan");
@@ -433,5 +503,16 @@ Route.prototype.draw = function(){
 	console.log("reitti piirretty");
 	*/
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
